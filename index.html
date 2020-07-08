@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        img {
+            width: 150px;
+            height: 100px;
+        }
+
+        body {
+            background-color: snow;
+        }
+
+        #countries>div {
+            border: solid 2px paleturquoise;
+            margin: 2px;
+            width: 300px;
+            height: 280px;
+            font-style: inherit;
+            font-size: large;
+            color: slateblue;
+            background-color:#ffe6f2;
+
+        }
+
+        #countries {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 70px;
+            color: mediumvioletred;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #main>div {
+            margin: 5px;
+        }
+
+
+
+        Button {
+            box-shadow: inset 0px 1px 0px 0px #dcecfb;
+            background: linear-gradient(to bottom, #bddbfa 5%, #80b5ea 100%);
+            background-color: #bddbfa;
+            border-radius: 6px;
+            border: 1px solid #84bbf3;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: Arial;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 6px 24px;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #528ecc;
+        }
+
+        Button:hover {
+            background: linear-gradient(to bottom, #80b5ea 5%, #bddbfa 100%);
+            background-color: #80b5ea;
+        }
+
+        Button:active {
+            position: relative;
+            top: 1px;
+        }
+      
+
+       
+    </style>
+
+</head>
+<center>
+
+    <body>
+        <div id="main">
+            <div id="h1">
+                <h1>
+                    Search Countries
+                </h1>
+            </div>
+            <div id="buttons">
+                <button id="search" onclick="getFocus()">Search</button>
+                <button id="all">All</button>
+            </div>
+            <div>
+                <input id="nameCountry" type="text">
+            </div>
+        </div>
+        <div id="countries"></div>
+        <script>
+            document.querySelector('#all').addEventListener('click', getDetailsAll);
+            function getDetailsAll() {
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    var Countries = document.getElementById("countries")
+                    var arrC = JSON.parse(xhr.responseText)
+
+                    for (var i = 0; i < arrC.length; i++) {
+                        Countries.innerHTML += `<div id = "${arrC[i].name}">
+                Name: ${arrC[i].name}<br>
+                Top level domain: ${arrC[i].topLevelDomain}<br>
+                Capital: ${arrC[i].capital}<br>
+                Currencies Code: ${arrC[i].currencies[0].code} <br>
+                Currencies Name: ${arrC[i].currencies[0].name} <br>
+                Currencies Symbol: ${arrC[i].currencies[0].symbol} <br>
+                Borders: ${arrC[i].borders}<br>
+                <img src="${arrC[i].flag}">
+
+                </div>`
+                    }
+                }
+                xhr.open('GET', 'https://restcountries.eu/rest/v2/all');
+                xhr.send();
+
+            }
+
+            document.querySelector('#search').addEventListener('click', getDetails);
+            function getDetails() {
+                var Country = document.getElementById("nameCountry").value
+                if (Country===""){
+                    alert('Write a state or letter!')
+                }
+                var Countries = document.getElementById("countries")
+                Countries.innerHTML = ""
+                const xhr1 = new XMLHttpRequest();
+                xhr1.onload = function () {
+                    var Countries = document.getElementById("countries")
+                    var arrC = JSON.parse(xhr1.responseText)
+
+                    for (var i = 0; i < arrC.length; i++) {
+                        Countries.innerHTML += `<div id = "${arrC[i].name}">
+                Name: ${arrC[i].name}<br>
+                Top level domain: ${arrC[i].topLevelDomain}<br>
+                Capital: ${arrC[i].capital}<br>
+                Currencies Code: ${arrC[i].currencies[0].code} <br>
+                Currencies Name: ${arrC[i].currencies[0].name} <br>
+                Currencies Symbol: ${arrC[i].currencies[0].symbol} <br>
+                <img src="${arrC[i].flag}"><br> 
+                </div>`
+                    }
+                }
+
+                xhr1.open('GET', 'https://restcountries.eu/rest/v2/name/' + Country);
+                xhr1.send();
+            }
+            function getFocus() {
+                document.querySelector("input").focus();
+            }
+
+        </script>
+
+
+
+
+    </body>
+</center>
+
+</html>
